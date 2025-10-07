@@ -15,6 +15,21 @@ export const findUserByEmail = async(email)=>{
     return result.rows[0];
 }
 
+//get all users
+export const getAllUsers = async(limit,offset) =>{
+    const result = await pool.query(
+        'Select id,full_name,email,role,created_at,updated_at from users order by created_at DESC limit $1 offset $2',
+        [limit,offset]
+    );
+    const countResult = await pool.query(
+        'Select  count(*) from users'
+    );
+    return {
+        users: result.rows,
+        total: parseInt(countResult.rows[0].count,10)
+    };
+} ;
+
 //user single get
 export const findUserById = async(id) =>{
     const result = await pool.query(

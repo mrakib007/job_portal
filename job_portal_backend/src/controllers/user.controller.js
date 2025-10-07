@@ -1,4 +1,4 @@
-import { getUserProfile, updateUserProfile } from "../services/user.service.js";
+import { getUserList, getUserProfile, updateUserProfile } from "../services/user.service.js";
 
 export const getProfile = async(req,res) =>{
     try{
@@ -6,6 +6,17 @@ export const getProfile = async(req,res) =>{
         const result = await getUserProfile(userId);
         res.status(200).json(result);
     } catch (error){
+        res.status(400).json({message: error.message});
+    }
+};
+
+export const getUsers = async (req,res) =>{
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 10;
+        const result = await getUserList(page,limit);
+        res.status(200).json(result);
+    }catch(error){
         res.status(400).json({message: error.message});
     }
 };

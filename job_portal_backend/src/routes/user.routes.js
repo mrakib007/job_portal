@@ -1,5 +1,68 @@
 /**
  * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get all users with pagination (Admin only)
+ *     tags: [Users]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: Page number (default is 1)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *         description: Number of users per page (default is 10)
+ *     responses:
+ *       200:
+ *         description: Users list retrieved successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 users:
+ *                   type: array
+ *                   items:
+ *                     type: object
+ *                     properties:
+ *                       id:
+ *                         type: string
+ *                       full_name:
+ *                         type: string
+ *                       email:
+ *                         type: string
+ *                       role:
+ *                         type: string
+ *                       created_at:
+ *                         type: string
+ *                       updated_at:
+ *                         type: string
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 25
+ *                     page:
+ *                       type: integer
+ *                       example: 1
+ *                     limit:
+ *                       type: integer
+ *                       example: 10
+ *                     totalPages:
+ *                       type: integer
+ *                       example: 3
+ *       400:
+ *         description: Bad request
+ */
+
+/**
+ * @swagger
  * /api/users/{id}:
  *   get:
  *     summary: Get user profile by ID
@@ -65,10 +128,11 @@
  */
 
 import express from 'express';
-import { getProfile, updateProfile } from "../controllers/user.controller.js";
+import { getProfile, getUsers, updateProfile } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
+router.get('/', getUsers);
 router.get('/:id',getProfile);
 router.put('/:id',updateProfile);
 

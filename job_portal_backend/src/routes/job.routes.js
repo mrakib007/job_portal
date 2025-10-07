@@ -2,8 +2,21 @@
  * @swagger
  * /api/jobs:
  *   get:
- *     summary: Get all active jobs
+ *     summary: Get all active jobs (with pagination)
  *     tags: [Jobs]
+ *     parameters:
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           example: 1
+ *         description: Page number (default is 1)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           example: 10
+ *         description: Number of jobs per page (default is 10)
  *     responses:
  *       200:
  *         description: List of jobs retrieved successfully
@@ -35,6 +48,21 @@
  *                         type: string
  *                       experience_level:
  *                         type: string
+ *                 pagination:
+ *                   type: object
+ *                   properties:
+ *                     total:
+ *                       type: integer
+ *                       example: 45
+ *                     page:
+ *                       type: integer
+ *                       example: 2
+ *                     limit:
+ *                       type: integer
+ *                       example: 10
+ *                     totalPages:
+ *                       type: integer
+ *                       example: 5
  *       400:
  *         description: Bad request
  */

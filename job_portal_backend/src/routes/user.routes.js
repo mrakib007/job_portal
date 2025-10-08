@@ -4,6 +4,8 @@
  *   get:
  *     summary: Get all users with pagination (Admin only)
  *     tags: [Users]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: query
  *         name: page
@@ -61,6 +63,10 @@
  *                       example: 3
  *       400:
  *         description: Bad request
+ *       401:
+ *         description: Unauthorized - Access token required
+ *       403:
+ *         description: Forbidden - Admin access required
  */
 
 /**
@@ -168,10 +174,11 @@
 
 import express from 'express';
 import { getProfile, getUsers, updateProfile, upload } from "../controllers/user.controller.js";
+import { authenticateToken, requireAdmin } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
-router.get('/', getUsers);
+router.get('/',authenticateToken,requireAdmin,getUsers);
 router.get('/:id',getProfile);
 router.put('/:id', upload.single('photo'), updateProfile);
 

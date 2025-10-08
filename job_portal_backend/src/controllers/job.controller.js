@@ -1,7 +1,17 @@
-import { createJobPost, getJobList } from "../services/job.service.js"
+import { createJobPost, getJobList, getSingleJob, updateJobPost } from "../services/job.service.js"
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+
+export const getJob = async(req,res) =>{
+    try {
+        const {id} = req.params;
+        const result = await getSingleJob(id);
+        res.status(200).json(result);
+    }catch(error){
+        res.status(400).json({message: error.message});
+    }
+};
 
 export const getJobs = async (req,res)=>{
     try {
@@ -37,6 +47,26 @@ export const createJob = async (req,res) =>{
     }catch(error){
         if(req.file){
             fs.unlinkSync(`uploads/companyLogos/${req.file.filename}`); 
+        }
+        res.status(400).json({message: error.message});
+    }
+};
+
+export const updateJob = async (req,res) =>{
+    try{
+        const {id} = req.params;
+        const currentJob = await getSingleJob(id);
+        
+        const jobData = {
+            ...req.body,
+            company_logo: req.file ? req.file.filename : currentJob.job.company_logo,
+            skills: req.body.skills ? req.body.skills.split(',') : [],
+        };
+        const result = await updateJobPost(id,jobData);
+        res.status(200).json(result);
+    }catch(error){
+        if(req.file) {
+            fs.unlinkSync(`uploads/companyLogos/${req.file.filename}`);
         }
         res.status(400).json({message: error.message});
     }

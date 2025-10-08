@@ -31,18 +31,20 @@ export const getAllUsers = async(limit,offset) =>{
 } ;
 
 //user single get
-export const findUserById = async(id) =>{
+export const findUserById = async(id) => {
     const result = await pool.query(
-        'Select id, full_name, email, role, created_at, updated_at from users where id = $1',[id]
+        'SELECT id, full_name, email, role, photo, created_at, updated_at FROM users WHERE id = $1',
+        [id]
     );
     return result.rows[0];
 };
 
 //update a user 
 export const updateUserById = async (id,userData) =>{
-    const {full_name,email} = userData;
+    const {full_name,email,photo} = userData;
     const result = await pool.query(
-        'Update users set full_name = $1, email = $2 where id = $3 returning id,full_name,email,role,updated_at',[full_name,email,id]
+        'UPDATE users SET full_name = $1, email = $2, photo = $3, updated_at = CURRENT_TIMESTAMP WHERE id = $4 RETURNING id,full_name,email,role,photo,updated_at',
+        [full_name, email, photo, id]
     );
     return result.rows[0];
 };

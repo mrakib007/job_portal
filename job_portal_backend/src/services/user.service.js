@@ -20,7 +20,7 @@ export const getUserList = async(page=1,limit=10) =>{
     };
 };
 
-export const updateUserProfile = async (userId,userData) =>{
+export const updateUserProfile = async (userId, userData) => {
     const {email} = userData;
     if(email){
         const existingUser = await findUserByEmail(email);
@@ -28,7 +28,7 @@ export const updateUserProfile = async (userId,userData) =>{
             throw new Error('Email already in use');
         }
     }
-    const updatedUser = await updateUserById(userId,userData);
+    const updatedUser = await updateUserById(userId, userData);
     if(!updatedUser) throw new Error('User not found');
     return {user: updatedUser};
-}
+};

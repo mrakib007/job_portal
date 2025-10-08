@@ -38,6 +38,8 @@
  *                         type: string
  *                       role:
  *                         type: string
+ *                       photo:
+ *                         type: string
  *                       created_at:
  *                         type: string
  *                       updated_at:
@@ -73,6 +75,7 @@
  *         required: true
  *         schema:
  *           type: string
+ *           format: uuid
  *         description: User ID
  *     responses:
  *       200:
@@ -87,20 +90,25 @@
  *                   properties:
  *                     id:
  *                       type: string
+ *                       format: uuid
  *                     full_name:
  *                       type: string
  *                     email:
  *                       type: string
  *                     role:
  *                       type: string
+ *                     photo:
+ *                       type: string
  *                     created_at:
  *                       type: string
+ *                       format: date-time
  *                     updated_at:
  *                       type: string
+ *                       format: date-time
  *       400:
  *         description: User not found
  *   put:
- *     summary: Update user profile
+ *     summary: Update user profile with optional photo upload
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -108,32 +116,63 @@
  *         required: true
  *         schema:
  *           type: string
+ *           format: uuid
  *         description: User ID
+ *     consumes:
+ *       - multipart/form-data
  *     requestBody:
  *       required: true
  *       content:
- *         application/json:
+ *         multipart/form-data:
  *           schema:
  *             type: object
  *             properties:
  *               full_name:
  *                 type: string
+ *                 example: "John Doe"
  *               email:
  *                 type: string
+ *                 example: "john@example.com"
+ *               photo:
+ *                 type: string
+ *                 format: binary
+ *                 description: User profile photo (optional - if not provided, keeps existing photo)
  *     responses:
  *       200:
  *         description: Profile updated successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 user:
+ *                   type: object
+ *                   properties:
+ *                     id:
+ *                       type: string
+ *                       format: uuid
+ *                     full_name:
+ *                       type: string
+ *                     email:
+ *                       type: string
+ *                     role:
+ *                       type: string
+ *                     photo:
+ *                       type: string
+ *                     updated_at:
+ *                       type: string
+ *                       format: date-time
  *       400:
  *         description: Bad request or email already in use
  */
 
 import express from 'express';
-import { getProfile, getUsers, updateProfile } from "../controllers/user.controller.js";
+import { getProfile, getUsers, updateProfile, upload } from "../controllers/user.controller.js";
 
 const router = express.Router();
 
 router.get('/', getUsers);
 router.get('/:id',getProfile);
-router.put('/:id',updateProfile);
+router.put('/:id', upload.single('photo'), updateProfile);
 
 export default router;

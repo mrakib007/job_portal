@@ -14,3 +14,14 @@ export const getAllJobs = async (limit,offset) =>{
         total: parseInt(countResult.rows[0].count, 10)
     };
 }
+
+export const createJob = async(jobData) =>{
+    const {title,description,company_name,location,salary_min,salary_max,job_type,experience_level,skills,company_logo,posted_by} = jobData;
+    const result = await pool.query(
+        `insert into jobs (title,description,company_name,location,salary_min,salary_max,job_type,experience_level,skills,company_logo,posted_by)
+        values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+        returning id,title,company_name,created_at`,
+        [title,description,company_name,location,salary_min,salary_max,job_type,experience_level,skills,company_logo,posted_by]
+    );
+    return result.rows[0];
+}

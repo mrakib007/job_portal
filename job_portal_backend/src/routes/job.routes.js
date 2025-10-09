@@ -255,6 +255,7 @@
  *         description: Bad request - validation error
  *       404:
  *         description: Job not found
+ */
 
 /**
  * @swagger

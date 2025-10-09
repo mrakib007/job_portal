@@ -5,6 +5,7 @@ import authRoutes from './routes/auth.routes.js';
 import jobRoutes from './routes/job.routes.js';
 import userRoutes from './routes/user.routes.js';
 import { swaggerDocs } from "./config/swagger.js";
+import applicationRoutes from './routes/application.routes.js';
 
 dotenv.config();
 
@@ -18,6 +19,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/jobs', jobRoutes);
 //Routes for user
 app.use('/api/users', userRoutes);
+//Application Routes
+app.use('/api/applications',applicationRoutes)
 
 //swagger docs
 swaggerDocs(app);

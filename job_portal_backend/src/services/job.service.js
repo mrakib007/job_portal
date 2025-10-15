@@ -1,4 +1,4 @@
-import { createJob, getAllJobs, getJobById, updateJob } from "../models/job.model.js"
+import { createJob, getAllJobs, getJobById, searchJobs, updateJob } from "../models/job.model.js"
 
 export const getSingleJob = async(id) =>{
     const job = await getJobById(id);
@@ -33,4 +33,20 @@ export const updateJobPost = async(id,jobData) =>{
         throw new Error("Job not found");
     }
     return {job};
-}
+};
+
+export const searchJobList = async (page=1,limit=10,filters={})=>{
+    const offset = (page-1) * limit;
+    const {jobs,total} = await searchJobs(limit,offset,filters);
+    return {
+        jobs,
+        pagination:{
+            total,
+            page,
+            limit,
+            totalPages: Math.ceil(total/limit),
+        }
+    };
+};
+
+
